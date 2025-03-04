@@ -1,0 +1,23 @@
+/// Prismaのクライアント生成設定
+/// このファイルはPrismaのスキーマ定義ファイルです
+generator client {
+  provider = "prisma-client-js"  // Prismaクライアントのプロバイダーを指定
+}
+
+/// データベース接続設定
+/// PostgreSQLデータベースへの接続情報を環境変数から取得
+datasource db {
+  provider = "postgresql"  // 使用するデータベースの種類
+  url      = env("DATABASE_URL")  // データベース接続URL（.envファイルから取得）
+}
+
+/// Todoモデルの定義
+/// データベースのテーブル構造を定義します
+model Todo {
+  id       Int      @id @default(autoincrement())  // 主キー、自動インクリメント
+  title    String   // タスクのタイトル
+  start    DateTime // 開始日時
+  end      DateTime // 終了日時
+  status   Int      @default(0)  // ステータス（0: 未着手, 1: 進行中, 2: 完了）
+  priority Int      @default(0)  // 優先度（0: 低, 1: 中, 2: 高）
+}

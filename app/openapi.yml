@@ -1,0 +1,150 @@
+openapi: 3.0.0
+info:
+  title: Todo API
+  description: TodoアプリケーションのAPI仕様
+  version: 1.0.0
+  contact:
+    name: API Support
+    email: support@example.com
+
+servers:
+  - url: http://localhost:3000
+    description: 開発環境
+
+paths:
+  /todo:
+    get:
+      summary: すべてのTodoを取得
+      description: データベースに保存されているすべてのTodoを取得します
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Todo'
+    post:
+      summary: 新しいTodoを作成
+      description: 新しいTodoを作成します
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTodoDto'
+      responses:
+        '201':
+          description: 作成成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+
+  /todo/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+        description: TodoのID
+    get:
+      summary: 特定のTodoを取得
+      description: IDで指定されたTodoの詳細を取得します
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+        '404':
+          description: Todoが見つかりません
+    patch:
+      summary: Todoを更新
+      description: IDで指定されたTodoの情報を更新します
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTodoDto'
+      responses:
+        '200':
+          description: 更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+        '404':
+          description: Todoが見つかりません
+    delete:
+      summary: Todoを削除
+      description: IDで指定されたTodoを削除します
+      responses:
+        '200':
+          description: 削除成功
+        '404':
+          description: Todoが見つかりません
+
+components:
+  schemas:
+    Todo:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Todoの一意のID
+        title:
+          type: string
+          description: Todoのタイトル
+        start:
+          type: string
+          format: date-time
+          description: 開始日時
+        end:
+          type: string
+          format: date-time
+          description: 終了日時
+        status:
+          type: integer
+          description: "ステータス (0: 未着手, 1: 進行中, 2: 完了)"
+        priority:
+          type: integer
+          description: "優先度 (0: 低, 1: 中, 2: 高)"
+      required:
+        - id
+        - title
+        - start
+        - end
+        - status
+        - priority
+
+    CreateTodoDto:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Todoのタイトル
+        start:
+          type: string
+          format: date-time
+          description: 開始日時
+        end:
+          type: string
+          format: date-time
+          description: 終了日時
+        status:
+          type: integer
+          description: "ステータス (0: 未着手, 1: 進行中, 2: 完了)"
+        priority:
+          type: integer
+          description: "優先度 (0: 低, 1: 中, 2: 高)"
+      required:
+        - title
+        - start
+        - end
+        - status
+        - priority
